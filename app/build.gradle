@@ -42,4 +42,11 @@ dependencies {
     // Lifecycle
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel:2.0.0'
+
+    // Retrofit, Gson, & OkHttp
+    implementation 'com.squareup.retrofit2:retrofit:2.5.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
+    implementation 'com.google.code.gson:gson:2.8.5'
+
+    implementation 'javax.annotation:javax.annotation-api:1.2'
 }
