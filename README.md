@@ -1,4 +1,4 @@
-# Photo-Gallery-App
+# Photo Gallery App
 
 To build, you must create a Kotlin file in `app/src/main/java/com/paulmillerd/photogalleryapp/` containing your consumer key, like so:
 
