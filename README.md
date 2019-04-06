@@ -21,4 +21,4 @@ const val GALLERY_CONSUMER_KEY = "your_consumer_key"
 
 ## Issues
 
-The images shift around when scrolling back up the gallery. This seems to be due to the view holders having to re-adjust their heights. A fix could be to determine the image height (from the meta data) before downloading the image and using this height to set the view holder height. I wasn't able to get this working.
+The images shift around when scrolling back up the gallery. This seems to be due to the view holders having to re-adjust their heights. A fix could be to determine the image height (from the meta data) before downloading the image and using this height to set the view holder height. More time would be needed to get this working.
