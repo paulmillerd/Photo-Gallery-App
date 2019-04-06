@@ -60,4 +60,7 @@ dependencies {
 
     // AppBarLayout
     implementation 'com.google.android.material:material:1.0.0'
+
+    // Pinch-to-zoom image view
+    implementation 'com.github.MikeOrtiz:TouchImageView:2.1.1'
 }
