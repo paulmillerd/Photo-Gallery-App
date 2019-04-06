@@ -31,7 +31,7 @@ data class PhotosItem(
     val disliked: Boolean? = null,
 
     @field:SerializedName("id")
-    val id: Int? = null,
+    val id: Long? = null,
 
     @field:SerializedName("image_format")
     val imageFormat: String? = null,

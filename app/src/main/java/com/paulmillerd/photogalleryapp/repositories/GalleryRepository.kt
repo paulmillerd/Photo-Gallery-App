@@ -14,11 +14,8 @@ import com.paulmillerd.photogalleryapp.models.Photo
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class GalleryRepository @Inject constructor(private val galleryService: GalleryService) : IGalleryRepository {
+class GalleryRepository(private val galleryService: GalleryService) : IGalleryRepository {
 
     override fun getFeature(feature: Feature, imageSizes: List<ImageSize>): LiveData<PagedList<Photo>> {
         return LivePagedListBuilder<Int, Photo>(object : DataSource.Factory<Int, Photo>() {
@@ -44,12 +41,12 @@ class GalleryRepository @Inject constructor(private val galleryService: GalleryS
     }
 
     private fun fetchPage(
-        feature: Feature, imageSizes: List<ImageSize>, afterKey: Int,
+        feature: Feature, imageSizes: List<ImageSize>, page: Int,
         initCallback: PageKeyedDataSource.LoadInitialCallback<Int, Photo>?,
         callback: PageKeyedDataSource.LoadCallback<Int, Photo>?
     ) {
         val imageSizeValues = imageSizes.map { it.value }
-        galleryService.getPhotos(feature = feature.value, imageSizes = imageSizeValues, page = afterKey)
+        galleryService.getPhotos(feature = feature.value, imageSizes = imageSizeValues, page = page)
             .enqueue(object : Callback<GalleryPageResponse> {
                 override fun onResponse(call: Call<GalleryPageResponse>, response: Response<GalleryPageResponse>) {
                     if (response.isSuccessful && response.body() != null) {
@@ -58,7 +55,10 @@ class GalleryRepository @Inject constructor(private val galleryService: GalleryS
                         } as MutableList<Photo>
                         val currentPage = response.body()?.currentPage ?: 0
                         if (initCallback != null) {
-                            initCallback.onResult(photos, null, currentPage + 1)
+                            initCallback.onResult(
+                                photos, 0, response.body()?.totalItems ?: 0,
+                                null, currentPage + 1
+                            )
                         } else {
                             callback?.onResult(photos, currentPage + 1)
                         }

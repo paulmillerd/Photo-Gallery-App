@@ -3,6 +3,7 @@ package com.paulmillerd.photogalleryapp.models
 import java.util.*
 
 data class Photo(
+    val id: Long?,
     val name: String?,
     val description: String?,
     val rating: Double?,
