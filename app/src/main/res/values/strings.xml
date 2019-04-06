@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Photo Gallery App</string>
+    <string name="popular_photos">Popular photos</string>
 </resources>

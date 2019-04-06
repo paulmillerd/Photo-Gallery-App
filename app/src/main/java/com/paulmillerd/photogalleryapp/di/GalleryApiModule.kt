@@ -1,8 +1,8 @@
 package com.paulmillerd.photogalleryapp.di
 
 import com.paulmillerd.photogalleryapp.GALLERY_API_URL
-import com.paulmillerd.photogalleryapp.galleryApi.ConsumerKeyInterceptor
-import com.paulmillerd.photogalleryapp.galleryApi.GalleryService
+import com.paulmillerd.photogalleryapp.api.ConsumerKeyInterceptor
+import com.paulmillerd.photogalleryapp.api.GalleryService
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient

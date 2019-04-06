@@ -1,6 +1,6 @@
 package com.paulmillerd.photogalleryapp.modelConverters
 
-import com.paulmillerd.photogalleryapp.galleryApi.responseModels.PhotosItem
+import com.paulmillerd.photogalleryapp.api.responseModels.PhotosItem
 import com.paulmillerd.photogalleryapp.models.ImageSize
 import com.paulmillerd.photogalleryapp.models.Photo
 import java.text.DateFormat
@@ -24,7 +24,8 @@ class PhotoFromApiConverter {
                 username = apiModel?.user?.username,
                 dateTaken = dateTaken,
                 bigUrl = apiModel?.images?.find { it?.size == ImageSize.LARGE.value }?.httpsUrl,
-                smallUrl = apiModel?.images?.find { it?.size == ImageSize.SMALL.value }?.httpsUrl
+                smallUrl = apiModel?.images?.find { it?.size == ImageSize.SMALL.value }?.httpsUrl,
+                heightWidthRatio = (apiModel?.height?.toDouble() ?: 1.0) / (apiModel?.width?.toDouble() ?: 1.0)
             )
         }
     }

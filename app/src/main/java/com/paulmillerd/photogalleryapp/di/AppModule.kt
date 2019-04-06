@@ -1,6 +1,6 @@
 package com.paulmillerd.photogalleryapp.di
 
-import com.paulmillerd.photogalleryapp.galleryApi.GalleryService
+import com.paulmillerd.photogalleryapp.api.GalleryService
 import com.paulmillerd.photogalleryapp.repositories.GalleryRepository
 import com.paulmillerd.photogalleryapp.repositories.IGalleryRepository
 import dagger.Module

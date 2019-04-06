@@ -11,18 +11,28 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager.VERTICAL
 import com.paulmillerd.photogalleryapp.PhotoGalleryApp
 import com.paulmillerd.photogalleryapp.R
+import com.paulmillerd.photogalleryapp.models.Photo
 import com.paulmillerd.photogalleryapp.repositories.IGalleryRepository
 import com.paulmillerd.photogalleryapp.viewModels.GalleryViewModel
 import kotlinx.android.synthetic.main.gallery_fragment_layout.*
 import javax.inject.Inject
 
-class GalleryFragment : Fragment() {
+class GalleryFragment : Fragment(), GalleryViewHolder.GalleryVHCallback {
 
     @Inject
     lateinit var galleryRepository: IGalleryRepository
 
     private lateinit var viewModel: GalleryViewModel
-    private val galleryAdapter = GalleryAdapter()
+    private var callback: GalleryFragmentCallback? = null
+    private val galleryAdapter = GalleryAdapter(this)
+
+    fun setCallback(callback: GalleryFragmentCallback) {
+        this.callback = callback
+    }
+
+    override fun onPhotoClicked(photo: Photo?) {
+        callback?.onPhotoClicked(photo)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.gallery_fragment_layout, container, false)
@@ -44,6 +54,10 @@ class GalleryFragment : Fragment() {
                 galleryAdapter.submitList(photos)
             })
         }
+    }
+
+    interface GalleryFragmentCallback {
+        fun onPhotoClicked(photo: Photo?)
     }
 
 }

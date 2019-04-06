@@ -1,4 +1,4 @@
-package com.paulmillerd.photogalleryapp.galleryApi
+package com.paulmillerd.photogalleryapp.api
 
 import com.paulmillerd.photogalleryapp.GALLERY_CONSUMER_KEY
 import okhttp3.Interceptor

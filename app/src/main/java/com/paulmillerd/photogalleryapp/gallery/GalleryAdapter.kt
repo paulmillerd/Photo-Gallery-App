@@ -5,10 +5,11 @@ import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import com.paulmillerd.photogalleryapp.models.Photo
 
-class GalleryAdapter : PagedListAdapter<Photo, GalleryViewHolder>(ChildrenDiffer()) {
+class GalleryAdapter(private val callback: GalleryViewHolder.GalleryVHCallback) :
+    PagedListAdapter<Photo, GalleryViewHolder>(ChildrenDiffer()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GalleryViewHolder {
-        return GalleryViewHolder.create(parent)
+        return GalleryViewHolder.create(parent, callback)
     }
 
     override fun onBindViewHolder(holder: GalleryViewHolder, position: Int) {

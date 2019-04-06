@@ -12,13 +12,14 @@ import com.paulmillerd.photogalleryapp.R
 import com.paulmillerd.photogalleryapp.models.Photo
 import kotlinx.android.synthetic.main.gallery_item_layout.view.*
 
-class GalleryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class GalleryViewHolder(itemView: View, private val callback: GalleryVHCallback) : RecyclerView.ViewHolder(itemView) {
 
     companion object {
-        fun create(parent: ViewGroup): GalleryViewHolder {
+        fun create(parent: ViewGroup, callback: GalleryVHCallback): GalleryViewHolder {
             return GalleryViewHolder(
                 LayoutInflater.from(parent.context)
-                    .inflate(R.layout.gallery_item_layout, parent, false)
+                    .inflate(R.layout.gallery_item_layout, parent, false),
+                callback
             )
         }
     }
@@ -36,7 +37,32 @@ class GalleryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                         )
                 )
                 .into(image_view)
+
+            image_view.setOnClickListener {
+                callback.onPhotoClicked(photo)
+            }
+
+//            val viewTreeObserver = image_view.viewTreeObserver
+//            if (viewTreeObserver.isAlive) {
+//                viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+//                    override fun onGlobalLayout() {
+//                        image_view.viewTreeObserver.removeOnGlobalLayoutListener(this)
+//                        val estimatedHeight = if (photo?.heightWidthRatio != null && photo.heightWidthRatio != 0.0) {
+//                            (image_view.width / photo.heightWidthRatio).toInt()
+//                        } else {
+//                            WRAP_CONTENT
+//                        }
+//                        image_view.layoutParams = image_view.layoutParams.also {
+//                            it.width = estimatedHeight
+//                        }
+//                    }
+//                })
+//            }
         }
+    }
+
+    interface GalleryVHCallback {
+        fun onPhotoClicked(photo: Photo?)
     }
 
 }

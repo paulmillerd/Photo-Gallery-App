@@ -1,6 +1,6 @@
-package com.paulmillerd.photogalleryapp.galleryApi
+package com.paulmillerd.photogalleryapp.api
 
-import com.paulmillerd.photogalleryapp.galleryApi.responseModels.GalleryPageResponse
+import com.paulmillerd.photogalleryapp.api.responseModels.GalleryPageResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -11,7 +11,7 @@ interface GalleryService {
     fun getPhotos(
         @Query("feature") feature: String,
         @Query("page") page: Int,
-        @Query("image_size") imageSizes: List<Int>
+        @Query("image_size[]") imageSizes: List<Int>
     ): Call<GalleryPageResponse>
 
 }

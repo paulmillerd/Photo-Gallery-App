@@ -5,8 +5,8 @@ import androidx.paging.DataSource
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PageKeyedDataSource
 import androidx.paging.PagedList
-import com.paulmillerd.photogalleryapp.galleryApi.GalleryService
-import com.paulmillerd.photogalleryapp.galleryApi.responseModels.GalleryPageResponse
+import com.paulmillerd.photogalleryapp.api.GalleryService
+import com.paulmillerd.photogalleryapp.api.responseModels.GalleryPageResponse
 import com.paulmillerd.photogalleryapp.modelConverters.PhotoFromApiConverter
 import com.paulmillerd.photogalleryapp.models.Feature
 import com.paulmillerd.photogalleryapp.models.ImageSize

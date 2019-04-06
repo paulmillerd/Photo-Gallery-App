@@ -1,4 +1,4 @@
-package com.paulmillerd.photogalleryapp.galleryApi.responseModels
+package com.paulmillerd.photogalleryapp.api.responseModels
 
 import javax.annotation.Generated
 

@@ -1,4 +1,4 @@
-package com.paulmillerd.photogalleryapp.galleryApi.responseModels
+package com.paulmillerd.photogalleryapp.api.responseModels
 
 import com.google.gson.annotations.SerializedName
 import javax.annotation.Generated

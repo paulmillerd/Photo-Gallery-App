@@ -1,5 +1,6 @@
 package com.paulmillerd.photogalleryapp.models
 
+import java.io.Serializable
 import java.util.*
 
 data class Photo(
@@ -10,5 +11,6 @@ data class Photo(
     val bigUrl: String?,
     val smallUrl: String?,
     val username: String?,
+    val heightWidthRatio: Double?,
     val dateTaken: Date?
-)
+) : Serializable
