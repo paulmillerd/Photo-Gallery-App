@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.paging.PagedList
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager.VERTICAL
 import com.paulmillerd.photogalleryapp.PhotoGalleryApp
@@ -26,6 +27,11 @@ class GalleryFragment : Fragment(), GalleryViewHolder.GalleryVHCallback {
     private var callback: GalleryFragmentCallback? = null
     private val galleryAdapter = GalleryAdapter(this)
 
+    private val photosObserver = Observer<PagedList<Photo>> { photos ->
+        galleryAdapter.submitList(photos)
+        swipe_refresh_layout.isRefreshing = false
+    }
+
     fun setCallback(callback: GalleryFragmentCallback) {
         this.callback = callback
     }
@@ -42,6 +48,10 @@ class GalleryFragment : Fragment(), GalleryViewHolder.GalleryVHCallback {
         super.onViewCreated(view, savedInstanceState)
         gallery_recycler_view.adapter = galleryAdapter
         gallery_recycler_view.layoutManager = StaggeredGridLayoutManager(2, VERTICAL)
+        swipe_refresh_layout.setOnRefreshListener {
+            galleryAdapter.submitList(null)
+            viewModel.refreshPopularPhotos()
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -50,9 +60,7 @@ class GalleryFragment : Fragment(), GalleryViewHolder.GalleryVHCallback {
             PhotoGalleryApp.getAppComponent(ctx).inject(this)
             viewModel = ViewModelProviders.of(this).get(GalleryViewModel::class.java)
             viewModel.init(galleryRepository)
-            viewModel.getPopular().observe(this, Observer { photos ->
-                galleryAdapter.submitList(photos)
-            })
+            viewModel.popularPhotos?.observe(this, photosObserver)
         }
     }
 
