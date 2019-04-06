@@ -49,4 +49,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.5'
 
     implementation 'javax.annotation:javax.annotation-api:1.2'
+
+    // Paging library
+    implementation 'androidx.paging:paging-runtime:2.1.0'
 }
