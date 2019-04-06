@@ -41,23 +41,6 @@ class GalleryViewHolder(itemView: View, private val callback: GalleryVHCallback)
             image_view.setOnClickListener {
                 callback.onPhotoClicked(photo)
             }
-
-//            val viewTreeObserver = image_view.viewTreeObserver
-//            if (viewTreeObserver.isAlive) {
-//                viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
-//                    override fun onGlobalLayout() {
-//                        image_view.viewTreeObserver.removeOnGlobalLayoutListener(this)
-//                        val estimatedHeight = if (photo?.heightWidthRatio != null && photo.heightWidthRatio != 0.0) {
-//                            (image_view.width / photo.heightWidthRatio).toInt()
-//                        } else {
-//                            WRAP_CONTENT
-//                        }
-//                        image_view.layoutParams = image_view.layoutParams.also {
-//                            it.width = estimatedHeight
-//                        }
-//                    }
-//                })
-//            }
         }
     }
 

@@ -13,11 +13,10 @@ import androidx.fragment.app.Fragment
 import androidx.transition.TransitionManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.paulmillerd.photogalleryapp.DateUtils.Companion.formatDate
 import com.paulmillerd.photogalleryapp.R
 import com.paulmillerd.photogalleryapp.models.Photo
 import kotlinx.android.synthetic.main.fullscreen_image_layout.*
-import java.text.SimpleDateFormat
-import java.util.*
 
 class FullscreenImageFragment : Fragment() {
 
@@ -70,10 +69,6 @@ class FullscreenImageFragment : Fragment() {
         } else {
             taken_by.visibility = GONE
         }
-    }
-
-    private fun formatDate(date: Date): String {
-        return SimpleDateFormat("MMMM dd, YYYY").format(date)
     }
 
 }
