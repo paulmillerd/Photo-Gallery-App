@@ -61,6 +61,7 @@ class GalleryFragment : Fragment(), GalleryViewHolder.GalleryVHCallback {
             viewModel = ViewModelProviders.of(this).get(GalleryViewModel::class.java)
             viewModel.init(galleryRepository)
             viewModel.popularPhotos?.observe(this, photosObserver)
+            viewModel.refreshPopularPhotos()
         }
     }
 

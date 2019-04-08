@@ -10,7 +10,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.paulmillerd.photogalleryapp"
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -65,4 +65,7 @@ dependencies {
 
     // Pinch-to-zoom image view
     implementation 'com.github.MikeOrtiz:TouchImageView:2.1.1'
+
+    // Architecture components testing
+    testImplementation 'android.arch.core:core-testing:1.1.1'
 }

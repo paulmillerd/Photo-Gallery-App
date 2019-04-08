@@ -20,7 +20,6 @@ class GalleryViewModel : ViewModel() {
 
     fun init(galleryRepository: IGalleryRepository) {
         this.galleryRepository = galleryRepository
-        refreshPopularPhotos()
     }
 
     fun refreshPopularPhotos() {
