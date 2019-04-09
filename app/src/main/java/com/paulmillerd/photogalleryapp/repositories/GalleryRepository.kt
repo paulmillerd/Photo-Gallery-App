@@ -1,6 +1,7 @@
 package com.paulmillerd.photogalleryapp.repositories
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PageKeyedDataSource
@@ -16,6 +17,8 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class GalleryRepository(private val galleryService: GalleryService) : IGalleryRepository {
+
+    private val errorsLiveData = MutableLiveData<Int?>()
 
     override fun getFeature(feature: Feature, imageSizes: List<ImageSize>): LiveData<PagedList<Photo>> {
         return LivePagedListBuilder<Int, Photo>(object : DataSource.Factory<Int, Photo>() {
@@ -40,35 +43,51 @@ class GalleryRepository(private val galleryService: GalleryService) : IGalleryRe
         }, 10).build()
     }
 
+    override fun getErrors(): LiveData<Int?> = errorsLiveData
+
     private fun fetchPage(
         feature: Feature, imageSizes: List<ImageSize>, page: Int,
         initCallback: PageKeyedDataSource.LoadInitialCallback<Int, Photo>?,
         callback: PageKeyedDataSource.LoadCallback<Int, Photo>?
     ) {
-        val imageSizeValues = imageSizes.map { it.value }
-        galleryService.getPhotos(feature = feature.value, imageSizes = imageSizeValues, page = page)
+        galleryService.getPhotos(feature = feature.value, imageSizes = imageSizes.map { it.value }, page = page)
             .enqueue(object : Callback<GalleryPageResponse> {
                 override fun onResponse(call: Call<GalleryPageResponse>, response: Response<GalleryPageResponse>) {
                     if (response.isSuccessful && response.body() != null) {
-                        val photos = response.body()?.photos?.map {
-                            PhotoFromApiConverter.convertApiModelToPhoto(it)
-                        } as MutableList<Photo>
-                        val currentPage = response.body()?.currentPage ?: 0
-                        if (initCallback != null) {
-                            initCallback.onResult(
-                                photos, 0, response.body()?.totalItems ?: 0,
-                                null, currentPage + 1
-                            )
-                        } else {
-                            callback?.onResult(photos, currentPage + 1)
-                        }
+                        response.body()?.let { processPageResponseBody(it, initCallback, callback) }
+                    } else {
+                        sendError(response.code())
                     }
                 }
 
                 override fun onFailure(call: Call<GalleryPageResponse>, t: Throwable) {
+                    sendError()
                     t.printStackTrace()
                 }
             })
+    }
+
+    private fun processPageResponseBody(
+        responseBody: GalleryPageResponse,
+        initCallback: PageKeyedDataSource.LoadInitialCallback<Int, Photo>?,
+        callback: PageKeyedDataSource.LoadCallback<Int, Photo>?
+    ) {
+        val photos = responseBody.photos?.map {
+            PhotoFromApiConverter.convertApiModelToPhoto(it)
+        } as MutableList<Photo>
+        val currentPage = responseBody.currentPage ?: 0
+        if (initCallback != null) {
+            initCallback.onResult(
+                photos, 0, responseBody.totalItems ?: 0,
+                null, currentPage + 1
+            )
+        } else {
+            callback?.onResult(photos, currentPage + 1)
+        }
+    }
+
+    private fun sendError(responseCode: Int? = null) {
+        errorsLiveData.postValue(responseCode)
     }
 
 }

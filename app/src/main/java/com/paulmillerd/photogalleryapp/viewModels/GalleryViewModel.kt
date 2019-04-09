@@ -14,12 +14,14 @@ class GalleryViewModel : ViewModel() {
 
     private var galleryRepository: IGalleryRepository? = null
     private val refresh = MutableLiveData<Boolean>()
-    var popularPhotos: LiveData<PagedList<Photo>>? = Transformations.switchMap(refresh) {
+    val popularPhotos: LiveData<PagedList<Photo>> = Transformations.switchMap(refresh) {
         galleryRepository?.getFeature(Feature.POPULAR, listOf(ImageSize.SMALL, ImageSize.LARGE))
     }
+    var errors: LiveData<Int?>? = null
 
     fun init(galleryRepository: IGalleryRepository) {
         this.galleryRepository = galleryRepository
+        errors = galleryRepository.getErrors()
     }
 
     fun refreshPopularPhotos() {

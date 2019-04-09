@@ -3,6 +3,8 @@ package com.paulmillerd.photogalleryapp.gallery
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -15,6 +17,7 @@ import com.paulmillerd.photogalleryapp.R
 import com.paulmillerd.photogalleryapp.models.Photo
 import com.paulmillerd.photogalleryapp.repositories.IGalleryRepository
 import com.paulmillerd.photogalleryapp.viewModels.GalleryViewModel
+import kotlinx.android.synthetic.main.error_layout.*
 import kotlinx.android.synthetic.main.gallery_fragment_layout.*
 import javax.inject.Inject
 
@@ -23,12 +26,22 @@ class GalleryFragment : Fragment(), GalleryViewHolder.GalleryVHCallback {
     @Inject
     lateinit var galleryRepository: IGalleryRepository
 
-    private lateinit var viewModel: GalleryViewModel
+    private var viewModel: GalleryViewModel? = null
     private var callback: GalleryFragmentCallback? = null
     private val galleryAdapter = GalleryAdapter(this)
 
     private val photosObserver = Observer<PagedList<Photo>> { photos ->
-        galleryAdapter.submitList(photos)
+        if (photos.isNotEmpty()) {
+            error_layout.visibility = GONE
+            galleryAdapter.submitList(photos)
+            swipe_refresh_layout.isRefreshing = false
+        }
+    }
+
+    private val errorsObserver = Observer<Int?> {
+        if (galleryAdapter.currentList.isNullOrEmpty()) {
+            error_layout.visibility = VISIBLE
+        }
         swipe_refresh_layout.isRefreshing = false
     }
 
@@ -50,7 +63,7 @@ class GalleryFragment : Fragment(), GalleryViewHolder.GalleryVHCallback {
         gallery_recycler_view.layoutManager = StaggeredGridLayoutManager(2, VERTICAL)
         swipe_refresh_layout.setOnRefreshListener {
             galleryAdapter.submitList(null)
-            viewModel.refreshPopularPhotos()
+            viewModel?.refreshPopularPhotos()
         }
     }
 
@@ -58,10 +71,14 @@ class GalleryFragment : Fragment(), GalleryViewHolder.GalleryVHCallback {
         super.onActivityCreated(savedInstanceState)
         context?.let { ctx ->
             PhotoGalleryApp.getAppComponent(ctx).inject(this)
-            viewModel = ViewModelProviders.of(this).get(GalleryViewModel::class.java)
-            viewModel.init(galleryRepository)
-            viewModel.popularPhotos?.observe(this, photosObserver)
-            viewModel.refreshPopularPhotos()
+            viewModel = ViewModelProviders.of(this).get(GalleryViewModel::class.java).also {
+                with(it) {
+                    init(galleryRepository)
+                    popularPhotos.observe(this@GalleryFragment, photosObserver)
+                    refreshPopularPhotos()
+                    errors?.observe(this@GalleryFragment, errorsObserver)
+                }
+            }
         }
     }
 

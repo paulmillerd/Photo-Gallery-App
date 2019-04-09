@@ -3,4 +3,5 @@
     <string name="popular_photos">Popular photos</string>
     <string name="taken_by">Taken by %s</string>
     <string name="taken_by_on">Taken by %s on %s</string>
+    <string name="sorry_something_wrong">Sorry, something went wrong</string>
 </resources>
