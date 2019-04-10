@@ -1,24 +1,18 @@
 package com.paulmillerd.photogalleryapp
 
+import java.text.DateFormat
 import java.text.ParseException
-import java.text.SimpleDateFormat
 import java.util.*
 
-class DateUtils {
-    companion object {
-        fun formatDate(date: Date): String {
-            return SimpleDateFormat.getDateInstance().format(date)
-        }
+class DateUtils(private val dateFormat: DateFormat) : IDateUtils {
 
-        fun parseIso8601Date(isoString: String): Date? {
-            val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:sszzzzz", Locale.getDefault())
-            return try {
-                format.parse(isoString)
-            } catch (e: ParseException) {
-                e.printStackTrace()
-                null
-            }
-
+    override fun parseIso8601Date(isoString: String): Date? {
+        return try {
+            dateFormat.parse(isoString)
+        } catch (e: ParseException) {
+            e.printStackTrace()
+            null
         }
     }
+
 }

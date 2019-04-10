@@ -8,7 +8,7 @@ import androidx.paging.PageKeyedDataSource
 import androidx.paging.PagedList
 import com.paulmillerd.photogalleryapp.api.GalleryService
 import com.paulmillerd.photogalleryapp.api.responseModels.GalleryPageResponse
-import com.paulmillerd.photogalleryapp.modelConverters.PhotoFromApiConverter
+import com.paulmillerd.photogalleryapp.modelConverters.IPhotoFromApiConverter
 import com.paulmillerd.photogalleryapp.models.Feature
 import com.paulmillerd.photogalleryapp.models.ImageSize
 import com.paulmillerd.photogalleryapp.models.Photo
@@ -16,7 +16,10 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class GalleryRepository(private val galleryService: GalleryService) : IGalleryRepository {
+class GalleryRepository(
+    private val galleryService: GalleryService,
+    private val photoFromApiConverter: IPhotoFromApiConverter
+) : IGalleryRepository {
 
     private val errorsLiveData = MutableLiveData<Int?>()
 
@@ -73,7 +76,7 @@ class GalleryRepository(private val galleryService: GalleryService) : IGalleryRe
         callback: PageKeyedDataSource.LoadCallback<Int, Photo>?
     ) {
         val photos = responseBody.photos?.map {
-            PhotoFromApiConverter.convertApiModelToPhoto(it)
+            photoFromApiConverter.convertApiModelToPhoto(it)
         } as MutableList<Photo>
         val currentPage = responseBody.currentPage ?: 0
         if (initCallback != null) {

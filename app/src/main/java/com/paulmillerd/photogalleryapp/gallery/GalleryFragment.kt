@@ -31,11 +31,9 @@ class GalleryFragment : Fragment(), GalleryViewHolder.GalleryVHCallback {
     private val galleryAdapter = GalleryAdapter(this)
 
     private val photosObserver = Observer<PagedList<Photo>> { photos ->
-        if (photos.isNotEmpty()) {
-            error_layout.visibility = GONE
-            galleryAdapter.submitList(photos)
-            swipe_refresh_layout.isRefreshing = false
-        }
+        error_layout.visibility = GONE
+        galleryAdapter.submitList(photos)
+        swipe_refresh_layout.isRefreshing = false
     }
 
     private val errorsObserver = Observer<Int?> {

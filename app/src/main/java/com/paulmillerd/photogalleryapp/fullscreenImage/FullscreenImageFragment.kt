@@ -13,10 +13,10 @@ import androidx.fragment.app.Fragment
 import androidx.transition.TransitionManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.paulmillerd.photogalleryapp.DateUtils.Companion.formatDate
 import com.paulmillerd.photogalleryapp.R
 import com.paulmillerd.photogalleryapp.models.Photo
 import kotlinx.android.synthetic.main.fullscreen_image_layout.*
+import java.text.SimpleDateFormat
 
 class FullscreenImageFragment : Fragment() {
 
@@ -61,7 +61,10 @@ class FullscreenImageFragment : Fragment() {
         }
 
         if (photo?.dateTaken != null && photo.username != null) {
-            taken_by.text = String.format(getString(R.string.taken_by_on), photo.username, formatDate(photo.dateTaken))
+            taken_by.text = String.format(
+                getString(R.string.taken_by_on), photo.username,
+                SimpleDateFormat.getDateInstance().format(photo.dateTaken)
+            )
             taken_by.visibility = VISIBLE
         } else if (photo?.username != null) {
             taken_by.text = String.format(getString(R.string.taken_by), photo.username)
