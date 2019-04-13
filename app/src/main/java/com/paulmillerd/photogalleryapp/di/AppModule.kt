@@ -20,7 +20,7 @@ class AppModule {
     @Provides
     @Singleton
     fun providesSimpleDateFormat(): DateFormat =
-        SimpleDateFormat("yyyy-MM-dd'T'HH:mm:sszzzzz", Locale.getDefault())
+        SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz", Locale.getDefault())
 
     @Provides
     @Singleton

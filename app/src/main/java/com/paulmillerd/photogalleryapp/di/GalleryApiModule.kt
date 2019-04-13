@@ -1,7 +1,7 @@
 package com.paulmillerd.photogalleryapp.di
 
-import com.paulmillerd.photogalleryapp.GALLERY_API_URL
 import com.paulmillerd.photogalleryapp.api.ConsumerKeyInterceptor
+import com.paulmillerd.photogalleryapp.api.GALLERY_API_URL
 import com.paulmillerd.photogalleryapp.api.GalleryService
 import dagger.Module
 import dagger.Provides
@@ -16,9 +16,14 @@ class GalleryApiModule {
 
     @Provides
     @Singleton
-    fun providesOkHttpClient(): OkHttpClient =
+    fun providesConsumerKeyInterceptor(): ConsumerKeyInterceptor =
+        ConsumerKeyInterceptor()
+
+    @Provides
+    @Singleton
+    fun providesOkHttpClient(consumerKeyInterceptor: ConsumerKeyInterceptor): OkHttpClient =
         OkHttpClient.Builder()
-            .addInterceptor(ConsumerKeyInterceptor())
+            .addInterceptor(consumerKeyInterceptor)
             .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
             .build()
 
