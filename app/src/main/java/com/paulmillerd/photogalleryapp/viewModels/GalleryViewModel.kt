@@ -7,14 +7,14 @@ import androidx.lifecycle.ViewModel
 import androidx.paging.PagedList
 import com.paulmillerd.photogalleryapp.models.Feature
 import com.paulmillerd.photogalleryapp.models.ImageSize
-import com.paulmillerd.photogalleryapp.models.Photo
+import com.paulmillerd.photogalleryapp.models.PhotoRow
 import com.paulmillerd.photogalleryapp.repositories.IGalleryRepository
 
 class GalleryViewModel : ViewModel() {
 
     private var galleryRepository: IGalleryRepository? = null
     private val refresh = MutableLiveData<Boolean>()
-    val popularPhotos: LiveData<PagedList<Photo>> = Transformations.switchMap(refresh) {
+    val popularPhotos: LiveData<PagedList<PhotoRow>> = Transformations.switchMap(refresh) {
         galleryRepository?.getFeature(Feature.POPULAR, listOf(ImageSize.SMALL, ImageSize.LARGE))
     }
     var errors: LiveData<Int?>? = null

@@ -10,11 +10,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.paging.PagedList
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import androidx.recyclerview.widget.StaggeredGridLayoutManager.VERTICAL
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.paulmillerd.photogalleryapp.PhotoGalleryApp
 import com.paulmillerd.photogalleryapp.R
 import com.paulmillerd.photogalleryapp.models.Photo
+import com.paulmillerd.photogalleryapp.models.PhotoRow
 import com.paulmillerd.photogalleryapp.repositories.IGalleryRepository
 import com.paulmillerd.photogalleryapp.viewModels.GalleryViewModel
 import kotlinx.android.synthetic.main.error_layout.*
@@ -30,9 +30,9 @@ class GalleryFragment : Fragment(), GalleryViewHolder.GalleryVHCallback {
     private var callback: GalleryFragmentCallback? = null
     private val galleryAdapter = GalleryAdapter(this)
 
-    private val photosObserver = Observer<PagedList<Photo>> { photos ->
+    private val photosObserver = Observer<PagedList<PhotoRow>> { rows ->
         error_layout.visibility = GONE
-        galleryAdapter.submitList(photos)
+        galleryAdapter.submitList(rows)
         swipe_refresh_layout.isRefreshing = false
     }
 
@@ -58,7 +58,7 @@ class GalleryFragment : Fragment(), GalleryViewHolder.GalleryVHCallback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         gallery_recycler_view.adapter = galleryAdapter
-        gallery_recycler_view.layoutManager = StaggeredGridLayoutManager(2, VERTICAL)
+        gallery_recycler_view.layoutManager = LinearLayoutManager(context)
         swipe_refresh_layout.setOnRefreshListener {
             galleryAdapter.submitList(null)
             viewModel?.refreshPopularPhotos()

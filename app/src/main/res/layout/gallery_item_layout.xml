@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ImageView
-        android:id="@+id/image_view"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_width="match_parent"
-        android:adjustViewBounds="true"
-        android:layout_height="wrap_content"
-        android:background="@android:color/black"
-        android:padding="4dp"
+<LinearLayout
+        android:id="@+id/photo_row_linear_layout"
         xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"/>
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_width="match_parent">
+
+    <!--<ImageView
+            android:layout_width="0dp"
+            android:layout_weight="4"
+            android:src="@drawable/ic_launcher_background"
+            android:adjustViewBounds="true"
+            android:layout_height="match_parent"
+            android:background="@android:color/black"
+            android:padding="4dp"/>
+
+    <ImageView
+            android:layout_width="0dp"
+            android:layout_weight="4"
+            android:src=""
+            android:adjustViewBounds="true"
+            android:layout_height="match_parent"
+            android:background="@android:color/black"
+            android:padding="4dp"/>-->
+
+</LinearLayout>
