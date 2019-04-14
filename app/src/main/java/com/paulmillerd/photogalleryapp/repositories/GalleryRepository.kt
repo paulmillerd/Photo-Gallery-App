@@ -24,10 +24,8 @@ class GalleryRepository(
 
     private val errorsLiveData = MutableLiveData<Int?>()
 
-    private var photoRowWip: PhotoRow? = null
-
     override fun getFeature(feature: Feature, imageSizes: List<ImageSize>): LiveData<PagedList<PhotoRow>> {
-        photoRowWip = PhotoRow()
+        val photoRowOrganizer = PhotoRowOrganizer()
         return LivePagedListBuilder<Int, PhotoRow>(object : DataSource.Factory<Int, PhotoRow>() {
             override fun create(): DataSource<Int, PhotoRow> {
                 return object : PageKeyedDataSource<Int, PhotoRow>() {
@@ -35,15 +33,15 @@ class GalleryRepository(
                         params: LoadInitialParams<Int>,
                         callback: LoadInitialCallback<Int, PhotoRow>
                     ) {
-                        fetchPage(feature, imageSizes, 1, callback, null)
+                        fetchPage(feature, imageSizes, 1, callback, null, photoRowOrganizer)
                     }
 
                     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, PhotoRow>) {
-                        fetchPage(feature, imageSizes, params.key, null, callback)
+                        fetchPage(feature, imageSizes, params.key, null, callback, photoRowOrganizer)
                     }
 
                     override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, PhotoRow>) {
-                        fetchPage(feature, imageSizes, params.key, null, callback)
+                        fetchPage(feature, imageSizes, params.key, null, callback, photoRowOrganizer)
                     }
                 }
             }
@@ -55,13 +53,13 @@ class GalleryRepository(
     private fun fetchPage(
         feature: Feature, imageSizes: List<ImageSize>, page: Int,
         initCallback: PageKeyedDataSource.LoadInitialCallback<Int, PhotoRow>?,
-        callback: PageKeyedDataSource.LoadCallback<Int, PhotoRow>?
+        callback: PageKeyedDataSource.LoadCallback<Int, PhotoRow>?, photoRowOrganizer: PhotoRowOrganizer
     ) {
         galleryService.getPhotos(feature = feature.value, imageSizes = imageSizes.map { it.value }, page = page)
             .enqueue(object : Callback<GalleryPageResponse> {
                 override fun onResponse(call: Call<GalleryPageResponse>, response: Response<GalleryPageResponse>) {
                     if (response.isSuccessful && response.body() != null) {
-                        response.body()?.let { processPageResponseBody(it, initCallback, callback) }
+                        response.body()?.let { processPageResponseBody(it, initCallback, callback, photoRowOrganizer) }
                     } else {
                         sendError(response.code())
                     }
@@ -77,34 +75,25 @@ class GalleryRepository(
     private fun processPageResponseBody(
         responseBody: GalleryPageResponse,
         initCallback: PageKeyedDataSource.LoadInitialCallback<Int, PhotoRow>?,
-        callback: PageKeyedDataSource.LoadCallback<Int, PhotoRow>?
+        callback: PageKeyedDataSource.LoadCallback<Int, PhotoRow>?,
+        photoRowOrganizer: PhotoRowOrganizer
     ) {
-        val photoRows = mutableListOf<PhotoRow>()
-
-        getPhotoList(responseBody).forEach { photo ->
-            if (photoRowWip == null) {
-                photoRowWip = PhotoRow()
-            }
-            photoRowWip?.let { row ->
-                if (row.previewHeightWidthRatio(photo) >= PhotoRow.TARGET_RATIO) {
-                    row.add(photo)
-                } else {
-                    photoRows.add(row)
-                    photoRowWip = PhotoRow()
-                    photoRowWip?.add(photo)
+        photoRowOrganizer.organizePhotos(
+            getPhotoList(responseBody),
+            object : PhotoRowOrganizerCallback {
+                override fun onPhotosOrganized(photoRows: List<PhotoRow>) {
+                    val currentPage = responseBody.currentPage ?: 0
+                    if (initCallback != null) {
+                        initCallback.onResult(
+                            photoRows, 0, responseBody.totalItems ?: 0,
+                            null, currentPage + 1
+                        )
+                    } else {
+                        callback?.onResult(photoRows, currentPage + 1)
+                    }
                 }
             }
-        }
-
-        val currentPage = responseBody.currentPage ?: 0
-        if (initCallback != null) {
-            initCallback.onResult(
-                photoRows, 0, responseBody.totalItems ?: 0,
-                null, currentPage + 1
-            )
-        } else {
-            callback?.onResult(photoRows, currentPage + 1)
-        }
+        )
     }
 
     private fun getPhotoList(responseBody: GalleryPageResponse) =

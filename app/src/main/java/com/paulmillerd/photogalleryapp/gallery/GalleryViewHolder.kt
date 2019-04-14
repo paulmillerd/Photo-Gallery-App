@@ -37,19 +37,12 @@ class GalleryViewHolder(itemView: View, private val callback: GalleryVHCallback)
         itemView.photo_row_linear_layout.removeAllViews()
         itemView.postInvalidate()
         photoRow?.forEachIndexed { index, photo ->
-            //            val textView = TextView(itemView.context)
-//            textView.layoutParams = LinearLayout.LayoutParams(0, WRAP_CONTENT, photoRow.getWeightOfPhotoAt(index).toFloat())
-//            textView.text = "${photo.id}, ${photo.smallUrl}, ${photoRow.getWeightOfPhotoAt(index)}"
-//            textView.setTextColor(ContextCompat.getColor(itemView.context, android.R.color.white))
-//            itemView.photo_row_linear_layout.addView(textView)
-            val imageView = ImageView(itemView.context)
-            imageView.layoutParams = LinearLayout.LayoutParams(
-                0,
-                WRAP_CONTENT,
-                photoRow.getWeightOfPhotoAt(index).toFloat()
-            )
-            imageView.adjustViewBounds = true
+            val imageView = createImageView(photoRow.getWeightOfPhotoAt(index).toFloat())
             itemView.photo_row_linear_layout.addView(imageView)
+            imageView.setOnClickListener {
+                callback.onPhotoClicked(photo)
+            }
+
             Glide.with(imageView)
                 .load(photo.smallUrl)
                 .listener(object : RequestListener<Drawable> {
@@ -82,12 +75,18 @@ class GalleryViewHolder(itemView: View, private val callback: GalleryVHCallback)
                         )
                 )
                 .into(imageView)
-
-            imageView.setOnClickListener {
-                callback.onPhotoClicked(photo)
-            }
         }
     }
+
+    private fun createImageView(weight: Float) =
+        ImageView(itemView.context).also {
+            it.layoutParams = LinearLayout.LayoutParams(
+                0,
+                WRAP_CONTENT,
+                weight
+            )
+            it.adjustViewBounds = true
+        }
 
     interface GalleryVHCallback {
         fun onPhotoClicked(photo: Photo?)

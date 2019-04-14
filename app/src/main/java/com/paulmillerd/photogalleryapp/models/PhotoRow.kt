@@ -3,7 +3,7 @@ package com.paulmillerd.photogalleryapp.models
 class PhotoRow : ArrayList<Photo>() {
 
     companion object {
-        const val TARGET_RATIO = 1.0 / 3.0
+        const val TARGET_RATIO = 1.0 / 3.5
     }
 
     fun getHeightWidthRatio(): Double {
@@ -22,7 +22,7 @@ class PhotoRow : ArrayList<Photo>() {
         }
     }
 
-    fun previewHeightWidthRatio(candidatePhoto: Photo): Double {
+    fun previewNewHeightWidthRatio(candidatePhoto: Photo): Double {
         val currentRatio = getHeightWidthRatio()
         if (currentRatio == 0.0) {
             return candidatePhoto.heightWidthRatio ?: 0.0
